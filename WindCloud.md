@@ -1,6 +1,7 @@
 --[[
     WIND CLOUD HUB
     Full-Screen Sky Loading + Animated Hub
+    Settings Only Edition
 ]]
 
 --==================================================
@@ -11,7 +12,6 @@ local Players = game:GetService("Players")
 local RunService = game:GetService("RunService")
 local UserInputService = game:GetService("UserInputService")
 local TweenService = game:GetService("TweenService")
-local Lighting = game:GetService("Lighting")
 local TeleportService = game:GetService("TeleportService")
 
 local LocalPlayer = Players.LocalPlayer
@@ -48,24 +48,20 @@ local Config = {
 --==================================================
 
 pcall(function()
-
     local oldCore = game.CoreGui:FindFirstChild("WindCloudHub")
 
     if oldCore then
         oldCore:Destroy()
     end
-
 end)
 
 pcall(function()
-
     local oldPlayerGui =
         LocalPlayer.PlayerGui:FindFirstChild("WindCloudHub")
 
     if oldPlayerGui then
         oldPlayerGui:Destroy()
     end
-
 end)
 
 --==================================================
@@ -97,7 +93,6 @@ end
 --==================================================
 
 local function Corner(parent, radius)
-
     local corner = Instance.new("UICorner")
     corner.CornerRadius = UDim.new(0, radius)
     corner.Parent = parent
@@ -105,13 +100,7 @@ local function Corner(parent, radius)
     return corner
 end
 
-local function Stroke(
-    parent,
-    color,
-    thickness,
-    transparency
-)
-
+local function Stroke(parent, color, thickness, transparency)
     local stroke = Instance.new("UIStroke")
 
     stroke.Color = color
@@ -123,23 +112,14 @@ local function Stroke(
     return stroke
 end
 
-local function Tween(
-    object,
-    time,
-    properties,
-    style,
-    direction
-)
-
+local function Tween(object, time, properties, style, direction)
     local tween = TweenService:Create(
         object,
-
         TweenInfo.new(
             time,
             style or Enum.EasingStyle.Quad,
             direction or Enum.EasingDirection.Out
         ),
-
         properties
     )
 
@@ -149,62 +129,45 @@ local function Tween(
 end
 
 --==================================================
--- FULL SCREEN SKY CREATOR
+-- FULL SCREEN SKY
 --==================================================
 
-local function CreateFullScreenSky(
-    name,
-    parent,
-    zIndex
-)
+local function CreateFullScreenSky(name, parent, zIndex)
 
     local sky = Instance.new("Frame")
 
     sky.Name = name
+    sky.Position = UDim2.new(0, 0, 0, 0)
+    sky.Size = UDim2.new(1, 0, 1, 0)
 
-    sky.AnchorPoint = Vector2.new(0, 0)
-
-    sky.Position =
-        UDim2.new(0, 0, 0, 0)
-
-    sky.Size =
-        UDim2.new(1, 0, 1, 0)
-
-    sky.BackgroundColor3 =
-        Config.SkyMiddle
-
+    sky.BackgroundColor3 = Config.SkyMiddle
     sky.BorderSizePixel = 0
 
-    sky.ClipsDescendants = false
-
     sky.ZIndex = zIndex
-
     sky.Parent = parent
 
-    local gradient =
-        Instance.new("UIGradient")
+    local gradient = Instance.new("UIGradient")
 
     gradient.Rotation = 90
 
-    gradient.Color =
-        ColorSequence.new({
+    gradient.Color = ColorSequence.new({
 
-            ColorSequenceKeypoint.new(
-                0,
-                Config.SkyTop
-            ),
+        ColorSequenceKeypoint.new(
+            0,
+            Config.SkyTop
+        ),
 
-            ColorSequenceKeypoint.new(
-                0.5,
-                Config.SkyMiddle
-            ),
+        ColorSequenceKeypoint.new(
+            0.5,
+            Config.SkyMiddle
+        ),
 
-            ColorSequenceKeypoint.new(
-                1,
-                Config.SkyBottom
-            )
+        ColorSequenceKeypoint.new(
+            1,
+            Config.SkyBottom
+        )
 
-        })
+    })
 
     gradient.Parent = sky
 
@@ -212,40 +175,26 @@ local function CreateFullScreenSky(
 end
 
 --==================================================
--- HUB SKY LAYER
+-- HUB SKY
 --==================================================
 
-local SkyLayer =
-    Instance.new("CanvasGroup")
+local SkyLayer = Instance.new("CanvasGroup")
 
-SkyLayer.Name =
-    "HubSkyLayer"
-
-SkyLayer.AnchorPoint =
-    Vector2.new(0, 0)
-
-SkyLayer.Position =
-    UDim2.new(0, 0, 0, 0)
-
-SkyLayer.Size =
-    UDim2.new(1, 0, 1, 0)
+SkyLayer.Name = "HubSkyLayer"
+SkyLayer.Position = UDim2.new(0, 0, 0, 0)
+SkyLayer.Size = UDim2.new(1, 0, 1, 0)
 
 SkyLayer.BackgroundTransparency = 1
-
 SkyLayer.GroupTransparency = 1
 
-SkyLayer.ClipsDescendants = false
-
 SkyLayer.ZIndex = 0
-
 SkyLayer.Parent = ScreenGui
 
-local SkyBackground =
-    CreateFullScreenSky(
-        "SkyBackground",
-        SkyLayer,
-        0
-    )
+CreateFullScreenSky(
+    "SkyBackground",
+    SkyLayer,
+    0
+)
 
 --==================================================
 -- HUB SUN
@@ -253,27 +202,16 @@ local SkyBackground =
 
 local Sun = Instance.new("Frame")
 
-Sun.Name = "Sun"
-
-Sun.Size =
-    UDim2.new(0, 125, 0, 125)
-
-Sun.Position =
-    UDim2.new(0.82, 0, 0.06, 0)
+Sun.Size = UDim2.new(0, 125, 0, 125)
+Sun.Position = UDim2.new(0.82, 0, 0.06, 0)
 
 Sun.BackgroundColor3 =
-    Color3.fromRGB(
-        255,
-        239,
-        150
-    )
+    Color3.fromRGB(255, 239, 150)
 
 Sun.BackgroundTransparency = 0.18
-
 Sun.BorderSizePixel = 0
 
 Sun.ZIndex = 1
-
 Sun.Parent = SkyLayer
 
 Corner(Sun, 100)
@@ -290,18 +228,13 @@ local function CreateCloud(
     zIndex
 )
 
-    local cloud =
-        Instance.new("Frame")
+    local cloud = Instance.new("Frame")
 
     cloud.Size = size
-
-    cloud.Position =
-        position
+    cloud.Position = position
 
     cloud.BackgroundTransparency = 1
-
     cloud.ZIndex = zIndex
-
     cloud.Parent = parent
 
     local pieces = {
@@ -331,35 +264,27 @@ local function CreateCloud(
 
     for _, piece in ipairs(pieces) do
 
-        local bubble =
-            Instance.new("Frame")
+        local bubble = Instance.new("Frame")
 
-        bubble.Size =
-            UDim2.new(
-                piece.W,
-                0,
-                piece.H,
-                0
-            )
+        bubble.Size = UDim2.new(
+            piece.W,
+            0,
+            piece.H,
+            0
+        )
 
-        bubble.Position =
-            UDim2.new(
-                piece.X,
-                0,
-                piece.Y,
-                0
-            )
+        bubble.Position = UDim2.new(
+            piece.X,
+            0,
+            piece.Y,
+            0
+        )
 
-        bubble.BackgroundColor3 =
-            Config.White
-
-        bubble.BackgroundTransparency =
-            transparency
-
+        bubble.BackgroundColor3 = Config.White
+        bubble.BackgroundTransparency = transparency
         bubble.BorderSizePixel = 0
 
         bubble.ZIndex = zIndex
-
         bubble.Parent = cloud
 
         Corner(bubble, 100)
@@ -379,22 +304,9 @@ table.insert(
 
     CreateCloud(
         SkyLayer,
-        UDim2.new(
-            -0.08,
-            0,
-            0.12,
-            0
-        ),
-
-        UDim2.new(
-            0,
-            300,
-            0,
-            110
-        ),
-
+        UDim2.new(-0.08, 0, 0.12, 0),
+        UDim2.new(0, 300, 0, 110),
         0.25,
-
         1
     )
 )
@@ -404,22 +316,9 @@ table.insert(
 
     CreateCloud(
         SkyLayer,
-        UDim2.new(
-            0.75,
-            0,
-            0.18,
-            0
-        ),
-
-        UDim2.new(
-            0,
-            285,
-            0,
-            105
-        ),
-
+        UDim2.new(0.75, 0, 0.18, 0),
+        UDim2.new(0, 285, 0, 105),
         0.28,
-
         1
     )
 )
@@ -429,22 +328,9 @@ table.insert(
 
     CreateCloud(
         SkyLayer,
-        UDim2.new(
-            0.08,
-            0,
-            0.77,
-            0
-        ),
-
-        UDim2.new(
-            0,
-            330,
-            0,
-            120
-        ),
-
+        UDim2.new(0.08, 0, 0.77, 0),
+        UDim2.new(0, 330, 0, 120),
         0.32,
-
         1
     )
 )
@@ -454,22 +340,9 @@ table.insert(
 
     CreateCloud(
         SkyLayer,
-        UDim2.new(
-            0.78,
-            0,
-            0.72,
-            0
-        ),
-
-        UDim2.new(
-            0,
-            270,
-            0,
-            105
-        ),
-
+        UDim2.new(0.78, 0, 0.72, 0),
+        UDim2.new(0, 270, 0, 105),
         0.3,
-
         1
     )
 )
@@ -496,19 +369,15 @@ for index, cloud in ipairs(HubClouds) do
                 Tween(
                     cloud,
                     5 + index,
-
                     {
                         Position =
                             UDim2.new(
                                 originalPosition.X.Scale,
-                                originalPosition.X.Offset
-                                    + direction,
-
+                                originalPosition.X.Offset + direction,
                                 originalPosition.Y.Scale,
                                 originalPosition.Y.Offset
                             )
                     },
-
                     Enum.EasingStyle.Sine,
                     Enum.EasingDirection.InOut
                 )
@@ -523,19 +392,15 @@ for index, cloud in ipairs(HubClouds) do
                 Tween(
                     cloud,
                     5 + index,
-
                     {
-                        Position =
-                            originalPosition
+                        Position = originalPosition
                     },
-
                     Enum.EasingStyle.Sine,
                     Enum.EasingDirection.InOut
                 )
 
             secondTween.Completed:Wait()
         end
-
     end)
 end
 
@@ -543,14 +408,9 @@ end
 -- LOADING SCREEN
 --==================================================
 
-local LoadingScreen =
-    Instance.new("CanvasGroup")
+local LoadingScreen = Instance.new("CanvasGroup")
 
-LoadingScreen.Name =
-    "LoadingScreen"
-
-LoadingScreen.AnchorPoint =
-    Vector2.new(0, 0)
+LoadingScreen.Name = "LoadingScreen"
 
 LoadingScreen.Position =
     UDim2.new(0, 0, 0, 0)
@@ -559,32 +419,22 @@ LoadingScreen.Size =
     UDim2.new(1, 0, 1, 0)
 
 LoadingScreen.BackgroundTransparency = 1
-
 LoadingScreen.GroupTransparency = 0
 
-LoadingScreen.ClipsDescendants = false
-
 LoadingScreen.ZIndex = 500
-
 LoadingScreen.Parent = ScreenGui
 
---==================================================
--- LOADING SKY
---==================================================
-
-local LoadingSky =
-    CreateFullScreenSky(
-        "LoadingSky",
-        LoadingScreen,
-        500
-    )
+CreateFullScreenSky(
+    "LoadingSky",
+    LoadingScreen,
+    500
+)
 
 --==================================================
 -- LOADING SUN
 --==================================================
 
-local LoadingSun =
-    Instance.new("Frame")
+local LoadingSun = Instance.new("Frame")
 
 LoadingSun.Size =
     UDim2.new(0, 135, 0, 135)
@@ -593,18 +443,13 @@ LoadingSun.Position =
     UDim2.new(0.82, 0, 0.06, 0)
 
 LoadingSun.BackgroundColor3 =
-    Color3.fromRGB(
-        255,
-        239,
-        150
-    )
+    Color3.fromRGB(255, 239, 150)
 
 LoadingSun.BackgroundTransparency = 0.18
 
 LoadingSun.BorderSizePixel = 0
 
 LoadingSun.ZIndex = 501
-
 LoadingSun.Parent = LoadingScreen
 
 Corner(LoadingSun, 100)
@@ -615,67 +460,25 @@ Corner(LoadingSun, 100)
 
 CreateCloud(
     LoadingScreen,
-
-    UDim2.new(
-        -0.08,
-        0,
-        0.12,
-        0
-    ),
-
-    UDim2.new(
-        0,
-        310,
-        0,
-        115
-    ),
-
+    UDim2.new(-0.08, 0, 0.12, 0),
+    UDim2.new(0, 310, 0, 115),
     0.2,
-
     502
 )
 
 CreateCloud(
     LoadingScreen,
-
-    UDim2.new(
-        0.74,
-        0,
-        0.22,
-        0
-    ),
-
-    UDim2.new(
-        0,
-        300,
-        0,
-        110
-    ),
-
+    UDim2.new(0.74, 0, 0.22, 0),
+    UDim2.new(0, 300, 0, 110),
     0.24,
-
     502
 )
 
 CreateCloud(
     LoadingScreen,
-
-    UDim2.new(
-        0.02,
-        0,
-        0.78,
-        0
-    ),
-
-    UDim2.new(
-        0,
-        340,
-        0,
-        120
-    ),
-
+    UDim2.new(0.02, 0, 0.78, 0),
+    UDim2.new(0, 340, 0, 120),
     0.3,
-
     502
 )
 
@@ -683,19 +486,13 @@ CreateCloud(
 -- LOADING LOGO
 --==================================================
 
-local LoadingLogo =
-    Instance.new("Frame")
+local LoadingLogo = Instance.new("Frame")
 
 LoadingLogo.Size =
     UDim2.new(0, 100, 0, 100)
 
 LoadingLogo.Position =
-    UDim2.new(
-        0.5,
-        -50,
-        0.35,
-        -50
-    )
+    UDim2.new(0.5, -50, 0.35, -50)
 
 LoadingLogo.BackgroundColor3 =
     Config.AccentDark
@@ -703,7 +500,6 @@ LoadingLogo.BackgroundColor3 =
 LoadingLogo.BorderSizePixel = 0
 
 LoadingLogo.ZIndex = 510
-
 LoadingLogo.Parent = LoadingScreen
 
 Corner(LoadingLogo, 25)
@@ -722,7 +518,6 @@ LoadingLogoText.Size =
     UDim2.fromScale(1, 1)
 
 LoadingLogoText.BackgroundTransparency = 1
-
 LoadingLogoText.Text = "W"
 
 LoadingLogoText.TextColor3 =
@@ -734,9 +529,7 @@ LoadingLogoText.Font =
 LoadingLogoText.TextSize = 52
 
 LoadingLogoText.ZIndex = 511
-
-LoadingLogoText.Parent =
-    LoadingLogo
+LoadingLogoText.Parent = LoadingLogo
 
 --==================================================
 -- LOADING TITLE
@@ -749,12 +542,7 @@ LoadingTitle.Size =
     UDim2.new(0.8, 0, 0, 50)
 
 LoadingTitle.Position =
-    UDim2.new(
-        0.1,
-        0,
-        0.53,
-        0
-    )
+    UDim2.new(0.1, 0, 0.53, 0)
 
 LoadingTitle.BackgroundTransparency = 1
 
@@ -770,9 +558,7 @@ LoadingTitle.Font =
 LoadingTitle.TextSize = 27
 
 LoadingTitle.ZIndex = 510
-
-LoadingTitle.Parent =
-    LoadingScreen
+LoadingTitle.Parent = LoadingScreen
 
 --==================================================
 -- LOADING SUBTITLE
@@ -782,20 +568,10 @@ local LoadingSubtitle =
     Instance.new("TextLabel")
 
 LoadingSubtitle.Size =
-    UDim2.new(
-        0.8,
-        0,
-        0,
-        25
-    )
+    UDim2.new(0.8, 0, 0, 25)
 
 LoadingSubtitle.Position =
-    UDim2.new(
-        0.1,
-        0,
-        0.61,
-        0
-    )
+    UDim2.new(0.1, 0, 0.61, 0)
 
 LoadingSubtitle.BackgroundTransparency = 1
 
@@ -811,9 +587,7 @@ LoadingSubtitle.Font =
 LoadingSubtitle.TextSize = 13
 
 LoadingSubtitle.ZIndex = 510
-
-LoadingSubtitle.Parent =
-    LoadingScreen
+LoadingSubtitle.Parent = LoadingScreen
 
 --==================================================
 -- LOADING BAR
@@ -823,32 +597,19 @@ local LoadingBar =
     Instance.new("Frame")
 
 LoadingBar.Size =
-    UDim2.new(
-        0,
-        280,
-        0,
-        8
-    )
+    UDim2.new(0, 280, 0, 8)
 
 LoadingBar.Position =
-    UDim2.new(
-        0.5,
-        -140,
-        0.69,
-        0
-    )
+    UDim2.new(0.5, -140, 0.69, 0)
 
 LoadingBar.BackgroundColor3 =
     Config.White
 
 LoadingBar.BackgroundTransparency = 0.45
-
 LoadingBar.BorderSizePixel = 0
 
 LoadingBar.ZIndex = 510
-
-LoadingBar.Parent =
-    LoadingScreen
+LoadingBar.Parent = LoadingScreen
 
 Corner(LoadingBar, 20)
 
@@ -856,12 +617,7 @@ local LoadingFill =
     Instance.new("Frame")
 
 LoadingFill.Size =
-    UDim2.new(
-        0,
-        0,
-        1,
-        0
-    )
+    UDim2.new(0, 0, 1, 0)
 
 LoadingFill.BackgroundColor3 =
     Config.White
@@ -869,9 +625,7 @@ LoadingFill.BackgroundColor3 =
 LoadingFill.BorderSizePixel = 0
 
 LoadingFill.ZIndex = 511
-
-LoadingFill.Parent =
-    LoadingBar
+LoadingFill.Parent = LoadingBar
 
 Corner(LoadingFill, 20)
 
@@ -879,25 +633,14 @@ local LoadingPercent =
     Instance.new("TextLabel")
 
 LoadingPercent.Size =
-    UDim2.new(
-        0,
-        100,
-        0,
-        25
-    )
+    UDim2.new(0, 100, 0, 25)
 
 LoadingPercent.Position =
-    UDim2.new(
-        0.5,
-        -50,
-        0.73,
-        0
-    )
+    UDim2.new(0.5, -50, 0.73, 0)
 
 LoadingPercent.BackgroundTransparency = 1
 
-LoadingPercent.Text =
-    "0%"
+LoadingPercent.Text = "0%"
 
 LoadingPercent.TextColor3 =
     Config.White
@@ -908,9 +651,7 @@ LoadingPercent.Font =
 LoadingPercent.TextSize = 11
 
 LoadingPercent.ZIndex = 510
-
-LoadingPercent.Parent =
-    LoadingScreen
+LoadingPercent.Parent = LoadingScreen
 
 --==================================================
 -- MAIN HUB
@@ -919,43 +660,26 @@ LoadingPercent.Parent =
 local Main =
     Instance.new("Frame")
 
-Main.Name =
-    "MainWindow"
+Main.Name = "MainWindow"
 
 Main.Size =
-    UDim2.new(
-        0,
-        0,
-        0,
-        0
-    )
+    UDim2.new(0, 0, 0, 0)
 
 Main.AnchorPoint =
-    Vector2.new(
-        0.5,
-        0.5
-    )
+    Vector2.new(0.5, 0.5)
 
 Main.Position =
-    UDim2.new(
-        0.5,
-        0,
-        0.5,
-        0
-    )
+    UDim2.new(0.5, 0, 0.5, 0)
 
 Main.BackgroundColor3 =
     Config.Panel
 
-Main.BackgroundTransparency =
-    0.08
+Main.BackgroundTransparency = 0.08
 
 Main.BorderSizePixel = 0
-
 Main.ClipsDescendants = true
 
 Main.ZIndex = 10
-
 Main.Parent = ScreenGui
 
 Corner(Main, 16)
@@ -975,23 +699,16 @@ local Header =
     Instance.new("Frame")
 
 Header.Size =
-    UDim2.new(
-        1,
-        0,
-        0,
-        52
-    )
+    UDim2.new(1, 0, 0, 52)
 
 Header.BackgroundColor3 =
     Config.White
 
-Header.BackgroundTransparency =
-    0.18
+Header.BackgroundTransparency = 0.18
 
 Header.BorderSizePixel = 0
 
 Header.ZIndex = 11
-
 Header.Parent = Main
 
 Corner(Header, 16)
@@ -1004,26 +721,15 @@ local Logo =
     Instance.new("Frame")
 
 Logo.Size =
-    UDim2.new(
-        0,
-        34,
-        0,
-        34
-    )
+    UDim2.new(0, 34, 0, 34)
 
 Logo.Position =
-    UDim2.new(
-        0,
-        10,
-        0.5,
-        -17
-    )
+    UDim2.new(0, 10, 0.5, -17)
 
 Logo.BackgroundColor3 =
     Config.AccentDark
 
 Logo.ZIndex = 12
-
 Logo.Parent = Header
 
 Corner(Logo, 10)
@@ -1047,7 +753,6 @@ LogoText.Font =
 LogoText.TextSize = 19
 
 LogoText.ZIndex = 13
-
 LogoText.Parent = Logo
 
 --==================================================
@@ -1058,20 +763,10 @@ local Title =
     Instance.new("TextLabel")
 
 Title.Size =
-    UDim2.new(
-        0,
-        240,
-        0,
-        25
-    )
+    UDim2.new(0, 240, 0, 25)
 
 Title.Position =
-    UDim2.new(
-        0,
-        54,
-        0,
-        7
-    )
+    UDim2.new(0, 54, 0, 7)
 
 Title.BackgroundTransparency = 1
 
@@ -1090,27 +785,16 @@ Title.TextXAlignment =
     Enum.TextXAlignment.Left
 
 Title.ZIndex = 12
-
 Title.Parent = Header
 
 local Subtitle =
     Instance.new("TextLabel")
 
 Subtitle.Size =
-    UDim2.new(
-        0,
-        240,
-        0,
-        18
-    )
+    UDim2.new(0, 240, 0, 18)
 
 Subtitle.Position =
-    UDim2.new(
-        0,
-        54,
-        0,
-        28
-    )
+    UDim2.new(0, 54, 0, 28)
 
 Subtitle.BackgroundTransparency = 1
 
@@ -1129,7 +813,6 @@ Subtitle.TextXAlignment =
     Enum.TextXAlignment.Left
 
 Subtitle.ZIndex = 12
-
 Subtitle.Parent = Header
 
 --==================================================
@@ -1140,20 +823,10 @@ local Minimize =
     Instance.new("TextButton")
 
 Minimize.Size =
-    UDim2.new(
-        0,
-        31,
-        0,
-        31
-    )
+    UDim2.new(0, 31, 0, 31)
 
 Minimize.Position =
-    UDim2.new(
-        1,
-        -72,
-        0.5,
-        -15
-    )
+    UDim2.new(1, -72, 0.5, -15)
 
 Minimize.BackgroundColor3 =
     Config.PanelDark
@@ -1171,7 +844,6 @@ Minimize.TextSize = 17
 Minimize.AutoButtonColor = false
 
 Minimize.ZIndex = 12
-
 Minimize.Parent = Header
 
 Corner(Minimize, 9)
@@ -1184,20 +856,10 @@ local Close =
     Instance.new("TextButton")
 
 Close.Size =
-    UDim2.new(
-        0,
-        31,
-        0,
-        31
-    )
+    UDim2.new(0, 31, 0, 31)
 
 Close.Position =
-    UDim2.new(
-        1,
-        -36,
-        0.5,
-        -15
-    )
+    UDim2.new(1, -36, 0.5, -15)
 
 Close.BackgroundColor3 =
     Config.PanelDark
@@ -1215,7 +877,6 @@ Close.TextSize = 18
 Close.AutoButtonColor = false
 
 Close.ZIndex = 12
-
 Close.Parent = Header
 
 Corner(Close, 9)
@@ -1259,18 +920,15 @@ UserInputService.InputChanged:Connect(function(input)
         Enum.UserInputType.Touch then
 
         local delta =
-            input.Position -
-            dragStart
+            input.Position - dragStart
 
         Main.Position =
             UDim2.new(
                 startPosition.X.Scale,
-                startPosition.X.Offset +
-                    delta.X,
+                startPosition.X.Offset + delta.X,
 
                 startPosition.Y.Scale,
-                startPosition.Y.Offset +
-                    delta.Y
+                startPosition.Y.Offset + delta.Y
             )
     end
 end)
@@ -1401,7 +1059,6 @@ Close.MouseButton1Click:Connect(function()
         if ScreenGui then
             ScreenGui:Destroy()
         end
-
     end)
 end)
 
@@ -1461,31 +1118,19 @@ local Sidebar =
     Instance.new("Frame")
 
 Sidebar.Size =
-    UDim2.new(
-        0,
-        145,
-        1,
-        -52
-    )
+    UDim2.new(0, 145, 1, -52)
 
 Sidebar.Position =
-    UDim2.new(
-        0,
-        0,
-        0,
-        52
-    )
+    UDim2.new(0, 0, 0, 52)
 
 Sidebar.BackgroundColor3 =
     Config.White
 
-Sidebar.BackgroundTransparency =
-    0.35
+Sidebar.BackgroundTransparency = 0.35
 
 Sidebar.BorderSizePixel = 0
 
 Sidebar.ZIndex = 11
-
 Sidebar.Parent = Main
 
 local SidebarPadding =
@@ -1523,25 +1168,14 @@ local Content =
     Instance.new("Frame")
 
 Content.Size =
-    UDim2.new(
-        1,
-        -157,
-        1,
-        -64
-    )
+    UDim2.new(1, -157, 1, -64)
 
 Content.Position =
-    UDim2.new(
-        0,
-        153,
-        0,
-        58
-    )
+    UDim2.new(0, 153, 0, 58)
 
 Content.BackgroundTransparency = 1
 
 Content.ZIndex = 11
-
 Content.Parent = Main
 
 --==================================================
@@ -1557,18 +1191,12 @@ local function CreateTab(name)
         Instance.new("TextButton")
 
     button.Size =
-        UDim2.new(
-            1,
-            0,
-            0,
-            39
-        )
+        UDim2.new(1, 0, 0, 39)
 
     button.BackgroundColor3 =
         Config.Cloud
 
-    button.BackgroundTransparency =
-        0.25
+    button.BackgroundTransparency = 0.25
 
     button.Text = name
 
@@ -1586,7 +1214,6 @@ local function CreateTab(name)
     button.AutoButtonColor = false
 
     button.ZIndex = 12
-
     button.Parent = Sidebar
 
     Corner(button, 9)
@@ -1607,7 +1234,6 @@ local function CreateTab(name)
         UDim2.fromScale(1, 1)
 
     page.BackgroundTransparency = 1
-
     page.BorderSizePixel = 0
 
     page.ScrollBarThickness = 3
@@ -1624,7 +1250,6 @@ local function CreateTab(name)
     page.Visible = false
 
     page.ZIndex = 12
-
     page.Parent = Content
 
     local pagePadding =
@@ -1707,46 +1332,106 @@ local function CreateTab(name)
 end
 
 --==================================================
--- COMPONENTS
+-- CREATE TABS
 --==================================================
 
-local function AddSection(
-    parent,
-    text
-)
+local PlayerTab =
+    CreateTab("Player")
 
-    local label =
-        Instance.new("TextLabel")
+local CombatTab =
+    CreateTab("Combat")
 
-    label.Size =
-        UDim2.new(
-            1,
-            0,
-            0,
-            24
-        )
+local VisualsTab =
+    CreateTab("Visuals")
 
-    label.BackgroundTransparency = 1
+local SettingsTab =
+    CreateTab("Settings")
 
-    label.Text =
-        string.upper(text)
+--==================================================
+-- EMPTY PLAYER PAGE
+--==================================================
 
-    label.TextColor3 =
-        Config.AccentDark
+AddSection = nil
 
-    label.Font =
-        Enum.Font.GothamBlack
+local PlayerMessage =
+    Instance.new("TextLabel")
 
-    label.TextSize = 11
+PlayerMessage.Size =
+    UDim2.new(1, 0, 0, 70)
 
-    label.TextXAlignment =
-        Enum.TextXAlignment.Left
+PlayerMessage.BackgroundTransparency = 1
 
-    label.Parent =
-        parent
-end
+PlayerMessage.Text =
+    "No features here."
 
-local function AddButton(
+PlayerMessage.TextColor3 =
+    Config.SubText
+
+PlayerMessage.Font =
+    Enum.Font.GothamMedium
+
+PlayerMessage.TextSize = 12
+
+PlayerMessage.Parent =
+    PlayerTab
+
+--==================================================
+-- EMPTY COMBAT PAGE
+--==================================================
+
+local CombatMessage =
+    Instance.new("TextLabel")
+
+CombatMessage.Size =
+    UDim2.new(1, 0, 0, 70)
+
+CombatMessage.BackgroundTransparency = 1
+
+CombatMessage.Text =
+    "No features here."
+
+CombatMessage.TextColor3 =
+    Config.SubText
+
+CombatMessage.Font =
+    Enum.Font.GothamMedium
+
+CombatMessage.TextSize = 12
+
+CombatMessage.Parent =
+    CombatTab
+
+--==================================================
+-- EMPTY VISUALS PAGE
+--==================================================
+
+local VisualsMessage =
+    Instance.new("TextLabel")
+
+VisualsMessage.Size =
+    UDim2.new(1, 0, 0, 70)
+
+VisualsMessage.BackgroundTransparency = 1
+
+VisualsMessage.Text =
+    "No features here."
+
+VisualsMessage.TextColor3 =
+    Config.SubText
+
+VisualsMessage.Font =
+    Enum.Font.GothamMedium
+
+VisualsMessage.TextSize = 12
+
+VisualsMessage.Parent =
+    VisualsTab
+
+--==================================================
+-- SETTINGS
+--==================================================
+
+local function AddSettingsButton(
     parent,
     text,
     callback
@@ -1756,18 +1441,12 @@ local function AddButton(
         Instance.new("TextButton")
 
     button.Size =
-        UDim2.new(
-            1,
-            0,
-            0,
-            39
-        )
+        UDim2.new(1, 0, 0, 42)
 
     button.BackgroundColor3 =
         Config.Cloud
 
-    button.BackgroundTransparency =
-        0.1
+    button.BackgroundTransparency = 0.1
 
     button.Text = text
 
@@ -1825,976 +1504,45 @@ local function AddButton(
     button.MouseButton1Click:Connect(function()
 
         pcall(callback)
-
     end)
 
     return button
 end
 
-local function AddToggle(
-    parent,
-    text,
-    defaultState,
-    callback
-)
-
-    local enabled =
-        defaultState or false
-
-    local frame =
-        Instance.new("Frame")
-
-    frame.Size =
-        UDim2.new(
-            1,
-            0,
-            0,
-            40
-        )
-
-    frame.BackgroundColor3 =
-        Config.Cloud
-
-    frame.BackgroundTransparency =
-        0.1
-
-    frame.Parent =
-        parent
-
-    Corner(frame, 9)
-
-    local label =
-        Instance.new("TextLabel")
-
-    label.Size =
-        UDim2.new(
-            1,
-            -70,
-            1,
-            0
-        )
-
-    label.Position =
-        UDim2.new(
-            0,
-            12,
-            0,
-            0
-        )
-
-    label.BackgroundTransparency = 1
-
-    label.Text = text
-
-    label.TextColor3 =
-        Config.Text
-
-    label.Font =
-        Enum.Font.GothamMedium
-
-    label.TextSize = 12
-
-    label.TextXAlignment =
-        Enum.TextXAlignment.Left
-
-    label.Parent =
-        frame
-
-    local switch =
-        Instance.new("Frame")
-
-    switch.Size =
-        UDim2.new(
-            0,
-            40,
-            0,
-            20
-        )
-
-    switch.Position =
-        UDim2.new(
-            1,
-            -50,
-            0.5,
-            -10
-        )
-
-    switch.BackgroundColor3 =
-        enabled
-        and Config.AccentDark
-        or Color3.fromRGB(
-            170,
-            195,
-            210
-        )
-
-    switch.Parent =
-        frame
-
-    Corner(switch, 20)
-
-    local knob =
-        Instance.new("Frame")
-
-    knob.Size =
-        UDim2.new(
-            0,
-            16,
-            0,
-            16
-        )
-
-    knob.Position =
-        enabled
-        and UDim2.new(
-            1,
-            -18,
-            0.5,
-            -8
-        )
-        or UDim2.new(
-            0,
-            2,
-            0.5,
-            -8
-        )
-
-    knob.BackgroundColor3 =
-        Config.White
-
-    knob.Parent =
-        switch
-
-    Corner(knob, 20)
-
-    local click =
-        Instance.new("TextButton")
-
-    click.Size =
-        UDim2.fromScale(1, 1)
-
-    click.BackgroundTransparency = 1
-
-    click.Text = ""
-
-    click.Parent =
-        frame
-
-    click.MouseButton1Click:Connect(function()
-
-        enabled =
-            not enabled
-
-        Tween(
-            switch,
-            0.18,
-            {
-                BackgroundColor3 =
-                    enabled
-                    and Config.AccentDark
-                    or Color3.fromRGB(
-                        170,
-                        195,
-                        210
-                    )
-            }
-        )
-
-        Tween(
-            knob,
-            0.2,
-            {
-                Position =
-                    enabled
-                    and UDim2.new(
-                        1,
-                        -18,
-                        0.5,
-                        -8
-                    )
-                    or UDim2.new(
-                        0,
-                        2,
-                        0.5,
-                        -8
-                    )
-            },
-            Enum.EasingStyle.Back
-        )
-
-        pcall(function()
-            callback(enabled)
-        end)
-
-    end)
-
-    return frame
-end
-
-local function AddSlider(
-    parent,
-    text,
-    minimum,
-    maximum,
-    default,
-    callback
-)
-
-    local value =
-        default or minimum
-
-    local frame =
-        Instance.new("Frame")
-
-    frame.Size =
-        UDim2.new(
-            1,
-            0,
-            0,
-            52
-        )
-
-    frame.BackgroundColor3 =
-        Config.Cloud
-
-    frame.BackgroundTransparency =
-        0.1
-
-    frame.Parent =
-        parent
-
-    Corner(frame, 9)
-
-    local label =
-        Instance.new("TextLabel")
-
-    label.Size =
-        UDim2.new(
-            0.7,
-            0,
-            0,
-            22
-        )
-
-    label.Position =
-        UDim2.new(
-            0,
-            12,
-            0,
-            4
-        )
-
-    label.BackgroundTransparency = 1
-
-    label.Text = text
-
-    label.TextColor3 =
-        Config.Text
-
-    label.Font =
-        Enum.Font.GothamMedium
-
-    label.TextSize = 12
-
-    label.TextXAlignment =
-        Enum.TextXAlignment.Left
-
-    label.Parent =
-        frame
-
-    local valueLabel =
-        Instance.new("TextLabel")
-
-    valueLabel.Size =
-        UDim2.new(
-            0,
-            55,
-            0,
-            22
-        )
-
-    valueLabel.Position =
-        UDim2.new(
-            1,
-            -67,
-            0,
-            4
-        )
-
-    valueLabel.BackgroundTransparency = 1
-
-    valueLabel.Text =
-        tostring(value)
-
-    valueLabel.TextColor3 =
-        Config.AccentDark
-
-    valueLabel.Font =
-        Enum.Font.GothamBold
-
-    valueLabel.TextSize = 11
-
-    valueLabel.TextXAlignment =
-        Enum.TextXAlignment.Right
-
-    valueLabel.Parent =
-        frame
-
-    local bar =
-        Instance.new("Frame")
-
-    bar.Size =
-        UDim2.new(
-            1,
-            -24,
-            0,
-            7
-        )
-
-    bar.Position =
-        UDim2.new(
-            0,
-            12,
-            0,
-            34
-        )
-
-    bar.BackgroundColor3 =
-        Color3.fromRGB(
-            170,
-            205,
-            220
-        )
-
-    bar.Parent =
-        frame
-
-    Corner(bar, 10)
-
-    local fill =
-        Instance.new("Frame")
-
-    fill.Size =
-        UDim2.new(
-            (value - minimum)
-                / (maximum - minimum),
-
-            0,
-
-            1,
-            0
-        )
-
-    fill.BackgroundColor3 =
-        Config.AccentDark
-
-    fill.Parent =
-        bar
-
-    Corner(fill, 10)
-
-    local sliding = false
-
-    local function Update(input)
-
-        local percentage =
-            math.clamp(
-                (
-                    input.Position.X -
-                    bar.AbsolutePosition.X
-                )
-                / bar.AbsoluteSize.X,
-
-                0,
-                1
-            )
-
-        value =
-            math.floor(
-                minimum +
-                (
-                    maximum -
-                    minimum
-                ) * percentage
-            )
-
-        valueLabel.Text =
-            tostring(value)
-
-        fill.Size =
-            UDim2.new(
-                percentage,
-                0,
-                1,
-                0
-            )
-
-        pcall(function()
-            callback(value)
-        end)
-    end
-
-    bar.InputBegan:Connect(function(input)
-
-        if input.UserInputType ==
-            Enum.UserInputType.MouseButton1
-
-            or input.UserInputType ==
-            Enum.UserInputType.Touch then
-
-            sliding = true
-
-            Update(input)
-        end
-    end)
-
-    UserInputService.InputChanged:Connect(function(input)
-
-        if not sliding then
-            return
-        end
-
-        if input.UserInputType ==
-            Enum.UserInputType.MouseMovement
-
-            or input.UserInputType ==
-            Enum.UserInputType.Touch then
-
-            Update(input)
-        end
-    end)
-
-    UserInputService.InputEnded:Connect(function(input)
-
-        if input.UserInputType ==
-            Enum.UserInputType.MouseButton1
-
-            or input.UserInputType ==
-            Enum.UserInputType.Touch then
-
-            sliding = false
-        end
-    end)
-
-    return frame
-end
-
-local function AddTextBox(
-    parent,
-    text,
-    placeholder,
-    callback
-)
-
-    local frame =
-        Instance.new("Frame")
-
-    frame.Size =
-        UDim2.new(
-            1,
-            0,
-            0,
-            40
-        )
-
-    frame.BackgroundColor3 =
-        Config.Cloud
-
-    frame.BackgroundTransparency =
-        0.1
-
-    frame.Parent =
-        parent
-
-    Corner(frame, 9)
-
-    local label =
-        Instance.new("TextLabel")
-
-    label.Size =
-        UDim2.new(
-            0.5,
-            0,
-            1,
-            0
-        )
-
-    label.Position =
-        UDim2.new(
-            0,
-            12,
-            0,
-            0
-        )
-
-    label.BackgroundTransparency = 1
-
-    label.Text = text
-
-    label.TextColor3 =
-        Config.Text
-
-    label.Font =
-        Enum.Font.GothamMedium
-
-    label.TextSize = 12
-
-    label.TextXAlignment =
-        Enum.TextXAlignment.Left
-
-    label.Parent =
-        frame
-
-    local input =
-        Instance.new("TextBox")
-
-    input.Size =
-        UDim2.new(
-            0,
-            130,
-            0,
-            26
-        )
-
-    input.Position =
-        UDim2.new(
-            1,
-            -140,
-            0.5,
-            -13
-        )
-
-    input.BackgroundColor3 =
-        Config.White
-
-    input.BackgroundTransparency =
-        0.15
-
-    input.PlaceholderText =
-        placeholder or "Type..."
-
-    input.PlaceholderColor3 =
-        Config.SubText
-
-    input.Text = ""
-
-    input.TextColor3 =
-        Config.Text
-
-    input.Font =
-        Enum.Font.Gotham
-
-    input.TextSize = 11
-
-    input.ClearTextOnFocus = false
-
-    input.Parent =
-        frame
-
-    Corner(input, 7)
-
-    input.FocusLost:Connect(
-        function(enterPressed)
-
-            if enterPressed then
-
-                pcall(function()
-                    callback(input.Text)
-                end)
-
-            end
-        end
-    )
-
-    return frame
-end
-
 --==================================================
--- TABS
+-- SETTINGS SECTION
 --==================================================
 
-local PlayerTab =
-    CreateTab("Player")
+local SettingsTitle =
+    Instance.new("TextLabel")
 
-local CombatTab =
-    CreateTab("Combat")
+SettingsTitle.Size =
+    UDim2.new(1, 0, 0, 28)
 
-local VisualsTab =
-    CreateTab("Visuals")
+SettingsTitle.BackgroundTransparency = 1
 
-local SettingsTab =
-    CreateTab("Settings")
+SettingsTitle.Text =
+    "WIND CLOUD SETTINGS"
 
---==================================================
--- PLAYER
---==================================================
+SettingsTitle.TextColor3 =
+    Config.AccentDark
 
-AddSection(
-    PlayerTab,
-    "Movement"
-)
+SettingsTitle.Font =
+    Enum.Font.GothamBlack
 
-AddSlider(
-    PlayerTab,
-    "Walk Speed",
-    16,
-    200,
-    16,
+SettingsTitle.TextSize = 12
 
-    function(value)
+SettingsTitle.TextXAlignment =
+    Enum.TextXAlignment.Left
 
-        local character =
-            LocalPlayer.Character
-
-        local humanoid =
-            character
-            and character:FindFirstChildOfClass(
-                "Humanoid"
-            )
-
-        if humanoid then
-            humanoid.WalkSpeed = value
-        end
-    end
-)
-
-AddSlider(
-    PlayerTab,
-    "Jump Power",
-    50,
-    300,
-    50,
-
-    function(value)
-
-        local character =
-            LocalPlayer.Character
-
-        local humanoid =
-            character
-            and character:FindFirstChildOfClass(
-                "Humanoid"
-            )
-
-        if humanoid then
-
-            humanoid.UseJumpPower = true
-
-            humanoid.JumpPower = value
-        end
-    end
-)
-
-local infiniteJump = false
-
-AddToggle(
-    PlayerTab,
-    "Infinite Jump",
-    false,
-
-    function(state)
-
-        infiniteJump = state
-    end
-)
-
-UserInputService.JumpRequest:Connect(
-    function()
-
-        if not infiniteJump then
-            return
-        end
-
-        local character =
-            LocalPlayer.Character
-
-        local humanoid =
-            character
-            and character:FindFirstChildOfClass(
-                "Humanoid"
-            )
-
-        if humanoid then
-
-            humanoid:ChangeState(
-                Enum.HumanoidStateType.Jumping
-            )
-
-        end
-    end
-)
-
-local noclip = false
-
-AddToggle(
-    PlayerTab,
-    "Noclip",
-    false,
-
-    function(state)
-
-        noclip = state
-    end
-)
-
-RunService.Stepped:Connect(
-    function()
-
-        if not noclip then
-            return
-        end
-
-        local character =
-            LocalPlayer.Character
-
-        if character then
-
-            for _, object in ipairs(
-                character:GetDescendants()
-            ) do
-
-                if object:IsA("BasePart") then
-                    object.CanCollide = false
-                end
-
-            end
-
-        end
-    end
-)
+SettingsTitle.Parent =
+    SettingsTab
 
 --==================================================
--- COMBAT
+-- REJOIN
 --==================================================
 
-AddSection(
-    CombatTab,
-    "Player Utilities"
-)
-
-AddTextBox(
-    CombatTab,
-    "Teleport To",
-    "Username...",
-
-    function(text)
-
-        if text == "" then
-            return
-        end
-
-        local target
-
-        for _, player in ipairs(
-            Players:GetPlayers()
-        ) do
-
-            if player ~= LocalPlayer then
-
-                if string.lower(
-                    player.Name
-                ):sub(
-                    1,
-                    #text
-                )
-                ==
-                string.lower(text) then
-
-                    target = player
-
-                    break
-                end
-            end
-        end
-
-        if target
-            and target.Character
-            and target.Character:
-                FindFirstChild(
-                    "HumanoidRootPart"
-                )
-            and LocalPlayer.Character
-            and LocalPlayer.Character:
-                FindFirstChild(
-                    "HumanoidRootPart"
-                ) then
-
-            LocalPlayer.Character
-                .HumanoidRootPart.CFrame =
-
-                target.Character
-                .HumanoidRootPart.CFrame
-        end
-    end
-)
-
-AddButton(
-    CombatTab,
-    "Reset Character",
-
-    function()
-
-        local character =
-            LocalPlayer.Character
-
-        local humanoid =
-            character
-            and character:FindFirstChildOfClass(
-                "Humanoid"
-            )
-
-        if humanoid then
-            humanoid.Health = 0
-        end
-    end
-)
-
---==================================================
--- VISUALS
---==================================================
-
-AddSection(
-    VisualsTab,
-    "Visual Settings"
-)
-
-local espEnabled = false
-
-local function ApplyESP()
-
-    for _, player in ipairs(
-        Players:GetPlayers()
-    ) do
-
-        if player ~= LocalPlayer
-            and player.Character then
-
-            local old =
-                player.Character:
-                FindFirstChild(
-                    "WindCloudHighlight"
-                )
-
-            if old then
-                old:Destroy()
-            end
-
-            if espEnabled then
-
-                local highlight =
-                    Instance.new("Highlight")
-
-                highlight.Name =
-                    "WindCloudHighlight"
-
-                highlight.FillColor =
-                    Config.Accent
-
-                highlight.FillTransparency =
-                    0.45
-
-                highlight.OutlineColor =
-                    Config.White
-
-                highlight.OutlineTransparency =
-                    0
-
-                highlight.Parent =
-                    player.Character
-            end
-        end
-    end
-end
-
-AddToggle(
-    VisualsTab,
-    "Player Highlights",
-    false,
-
-    function(state)
-
-        espEnabled = state
-
-        ApplyESP()
-    end
-)
-
-Players.PlayerAdded:Connect(
-    function(player)
-
-        player.CharacterAdded:Connect(
-            function()
-
-                task.wait(0.5)
-
-                if espEnabled then
-                    ApplyESP()
-                end
-
-            end
-        )
-    end
-)
-
-local fullbright = false
-
-AddToggle(
-    VisualsTab,
-    "Fullbright",
-    false,
-
-    function(state)
-
-        fullbright = state
-
-        if state then
-
-            Lighting.Brightness = 2
-
-            Lighting.ClockTime = 14
-
-            Lighting.FogEnd = 100000
-
-            Lighting.GlobalShadows = false
-
-        else
-
-            Lighting.Brightness = 1
-
-            Lighting.GlobalShadows = true
-
-        end
-    end
-)
-
-AddSlider(
-    VisualsTab,
-    "Camera FOV",
-    70,
-    120,
-    70,
-
-    function(value)
-
-        local camera =
-            workspace.CurrentCamera
-
-        if camera then
-            camera.FieldOfView = value
-        end
-    end
-)
-
---==================================================
--- SETTINGS
---==================================================
-
-AddSection(
-    SettingsTab,
-    "Wind Cloud"
-)
-
-AddButton(
+AddSettingsButton(
     SettingsTab,
     "Rejoin Server",
 
@@ -2809,7 +1557,11 @@ AddButton(
     end
 )
 
-AddButton(
+--==================================================
+-- RESET UI
+--==================================================
+
+AddSettingsButton(
     SettingsTab,
     "Reset UI Position",
 
@@ -2818,7 +1570,6 @@ AddButton(
         Tween(
             Main,
             0.35,
-
             {
                 Position =
                     UDim2.new(
@@ -2832,27 +1583,45 @@ AddButton(
     end
 )
 
-AddSection(
-    SettingsTab,
-    "Information"
-)
+--==================================================
+-- INFORMATION
+--==================================================
+
+local InfoTitle =
+    Instance.new("TextLabel")
+
+InfoTitle.Size =
+    UDim2.new(1, 0, 0, 25)
+
+InfoTitle.BackgroundTransparency = 1
+
+InfoTitle.Text =
+    "INFORMATION"
+
+InfoTitle.TextColor3 =
+    Config.AccentDark
+
+InfoTitle.Font =
+    Enum.Font.GothamBlack
+
+InfoTitle.TextSize = 11
+
+InfoTitle.TextXAlignment =
+    Enum.TextXAlignment.Left
+
+InfoTitle.Parent =
+    SettingsTab
 
 local Info =
     Instance.new("TextLabel")
 
 Info.Size =
-    UDim2.new(
-        1,
-        0,
-        0,
-        78
-    )
+    UDim2.new(1, 0, 0, 78)
 
 Info.BackgroundColor3 =
     Config.Cloud
 
-Info.BackgroundTransparency =
-    0.1
+Info.BackgroundTransparency = 0.1
 
 Info.Text =
     "WIND CLOUD HUB\n\n" ..
@@ -2906,11 +1675,9 @@ task.spawn(function()
         local progress =
             math.clamp(
                 (
-                    os.clock()
-                    - startTime
-                )
-                / duration,
-
+                    os.clock() -
+                    startTime
+                ) / duration,
                 0,
                 1
             )
@@ -2925,11 +1692,8 @@ task.spawn(function()
 
         LoadingPercent.Text =
             tostring(
-                math.floor(
-                    progress * 100
-                )
-            )
-            .. "%"
+                math.floor(progress * 100)
+            ) .. "%"
 
         if progress >= 1 then
             break
@@ -2945,10 +1709,6 @@ task.spawn(function()
         "100%"
 
     task.wait(0.5)
-
-    --==================================================
-    -- LOADING SKY + LOADING SCREEN FADE
-    --==================================================
 
     Tween(
         LoadingScreen,
@@ -2968,12 +1728,7 @@ task.spawn(function()
         LoadingScreen:Destroy()
     end
 
-    --==================================================
-    -- HUB SKY FADE IN
-    --==================================================
-
     SkyLayer.Visible = true
-
     SkyLayer.GroupTransparency = 1
 
     Tween(
@@ -2985,10 +1740,6 @@ task.spawn(function()
         Enum.EasingStyle.Quad,
         Enum.EasingDirection.Out
     )
-
-    --==================================================
-    -- HUB OPEN
-    --==================================================
 
     Tween(
         Main,
@@ -3014,5 +1765,4 @@ task.spawn(function()
         Enum.EasingStyle.Back,
         Enum.EasingDirection.Out
     )
-
 end)
