@@ -1,7 +1,7 @@
 --[[
     WIND CLOUD HUB
     Full-Screen Sky Loading + Animated Hub
-    Settings Only Edition
+    Custom AddButton System
 ]]
 
 --==================================================
@@ -56,8 +56,7 @@ pcall(function()
 end)
 
 pcall(function()
-    local oldPlayerGui =
-        LocalPlayer.PlayerGui:FindFirstChild("WindCloudHub")
+    local oldPlayerGui = LocalPlayer.PlayerGui:FindFirstChild("WindCloudHub")
 
     if oldPlayerGui then
         oldPlayerGui:Destroy()
@@ -96,19 +95,15 @@ local function Corner(parent, radius)
     local corner = Instance.new("UICorner")
     corner.CornerRadius = UDim.new(0, radius)
     corner.Parent = parent
-
     return corner
 end
 
 local function Stroke(parent, color, thickness, transparency)
     local stroke = Instance.new("UIStroke")
-
     stroke.Color = color
     stroke.Thickness = thickness or 1
     stroke.Transparency = transparency or 0
-
     stroke.Parent = parent
-
     return stroke
 end
 
@@ -124,7 +119,6 @@ local function Tween(object, time, properties, style, direction)
     )
 
     tween:Play()
-
     return tween
 end
 
@@ -151,22 +145,9 @@ local function CreateFullScreenSky(name, parent, zIndex)
     gradient.Rotation = 90
 
     gradient.Color = ColorSequence.new({
-
-        ColorSequenceKeypoint.new(
-            0,
-            Config.SkyTop
-        ),
-
-        ColorSequenceKeypoint.new(
-            0.5,
-            Config.SkyMiddle
-        ),
-
-        ColorSequenceKeypoint.new(
-            1,
-            Config.SkyBottom
-        )
-
+        ColorSequenceKeypoint.new(0, Config.SkyTop),
+        ColorSequenceKeypoint.new(0.5, Config.SkyMiddle),
+        ColorSequenceKeypoint.new(1, Config.SkyBottom)
     })
 
     gradient.Parent = sky
@@ -183,18 +164,12 @@ local SkyLayer = Instance.new("CanvasGroup")
 SkyLayer.Name = "HubSkyLayer"
 SkyLayer.Position = UDim2.new(0, 0, 0, 0)
 SkyLayer.Size = UDim2.new(1, 0, 1, 0)
-
 SkyLayer.BackgroundTransparency = 1
 SkyLayer.GroupTransparency = 1
-
 SkyLayer.ZIndex = 0
 SkyLayer.Parent = ScreenGui
 
-CreateFullScreenSky(
-    "SkyBackground",
-    SkyLayer,
-    0
-)
+CreateFullScreenSky("SkyBackground", SkyLayer, 0)
 
 --==================================================
 -- HUB SUN
@@ -204,13 +179,9 @@ local Sun = Instance.new("Frame")
 
 Sun.Size = UDim2.new(0, 125, 0, 125)
 Sun.Position = UDim2.new(0.82, 0, 0.06, 0)
-
-Sun.BackgroundColor3 =
-    Color3.fromRGB(255, 239, 150)
-
+Sun.BackgroundColor3 = Color3.fromRGB(255, 239, 150)
 Sun.BackgroundTransparency = 0.18
 Sun.BorderSizePixel = 0
-
 Sun.ZIndex = 1
 Sun.Parent = SkyLayer
 
@@ -220,25 +191,17 @@ Corner(Sun, 100)
 -- CLOUD CREATOR
 --==================================================
 
-local function CreateCloud(
-    parent,
-    position,
-    size,
-    transparency,
-    zIndex
-)
+local function CreateCloud(parent, position, size, transparency, zIndex)
 
     local cloud = Instance.new("Frame")
 
     cloud.Size = size
     cloud.Position = position
-
     cloud.BackgroundTransparency = 1
     cloud.ZIndex = zIndex
     cloud.Parent = parent
 
     local pieces = {
-
         {
             X = 0.02,
             Y = 0.35,
@@ -259,26 +222,14 @@ local function CreateCloud(
             W = 0.43,
             H = 0.62
         }
-
     }
 
     for _, piece in ipairs(pieces) do
 
         local bubble = Instance.new("Frame")
 
-        bubble.Size = UDim2.new(
-            piece.W,
-            0,
-            piece.H,
-            0
-        )
-
-        bubble.Position = UDim2.new(
-            piece.X,
-            0,
-            piece.Y,
-            0
-        )
+        bubble.Size = UDim2.new(piece.W, 0, piece.H, 0)
+        bubble.Position = UDim2.new(piece.X, 0, piece.Y, 0)
 
         bubble.BackgroundColor3 = Config.White
         bubble.BackgroundTransparency = transparency
@@ -301,7 +252,6 @@ local HubClouds = {}
 
 table.insert(
     HubClouds,
-
     CreateCloud(
         SkyLayer,
         UDim2.new(-0.08, 0, 0.12, 0),
@@ -313,7 +263,6 @@ table.insert(
 
 table.insert(
     HubClouds,
-
     CreateCloud(
         SkyLayer,
         UDim2.new(0.75, 0, 0.18, 0),
@@ -325,7 +274,6 @@ table.insert(
 
 table.insert(
     HubClouds,
-
     CreateCloud(
         SkyLayer,
         UDim2.new(0.08, 0, 0.77, 0),
@@ -337,7 +285,6 @@ table.insert(
 
 table.insert(
     HubClouds,
-
     CreateCloud(
         SkyLayer,
         UDim2.new(0.78, 0, 0.72, 0),
@@ -355,32 +302,26 @@ for index, cloud in ipairs(HubClouds) do
 
     task.spawn(function()
 
-        local originalPosition =
-            cloud.Position
+        local originalPosition = cloud.Position
 
         while cloud.Parent do
 
-            local direction =
-                index % 2 == 0
-                and 22
-                or -22
+            local direction = index % 2 == 0 and 22 or -22
 
-            local firstTween =
-                Tween(
-                    cloud,
-                    5 + index,
-                    {
-                        Position =
-                            UDim2.new(
-                                originalPosition.X.Scale,
-                                originalPosition.X.Offset + direction,
-                                originalPosition.Y.Scale,
-                                originalPosition.Y.Offset
-                            )
-                    },
-                    Enum.EasingStyle.Sine,
-                    Enum.EasingDirection.InOut
-                )
+            local firstTween = Tween(
+                cloud,
+                5 + index,
+                {
+                    Position = UDim2.new(
+                        originalPosition.X.Scale,
+                        originalPosition.X.Offset + direction,
+                        originalPosition.Y.Scale,
+                        originalPosition.Y.Offset
+                    )
+                },
+                Enum.EasingStyle.Sine,
+                Enum.EasingDirection.InOut
+            )
 
             firstTween.Completed:Wait()
 
@@ -388,16 +329,15 @@ for index, cloud in ipairs(HubClouds) do
                 break
             end
 
-            local secondTween =
-                Tween(
-                    cloud,
-                    5 + index,
-                    {
-                        Position = originalPosition
-                    },
-                    Enum.EasingStyle.Sine,
-                    Enum.EasingDirection.InOut
-                )
+            local secondTween = Tween(
+                cloud,
+                5 + index,
+                {
+                    Position = originalPosition
+                },
+                Enum.EasingStyle.Sine,
+                Enum.EasingDirection.InOut
+            )
 
             secondTween.Completed:Wait()
         end
@@ -411,24 +351,14 @@ end
 local LoadingScreen = Instance.new("CanvasGroup")
 
 LoadingScreen.Name = "LoadingScreen"
-
-LoadingScreen.Position =
-    UDim2.new(0, 0, 0, 0)
-
-LoadingScreen.Size =
-    UDim2.new(1, 0, 1, 0)
-
+LoadingScreen.Position = UDim2.new(0, 0, 0, 0)
+LoadingScreen.Size = UDim2.new(1, 0, 1, 0)
 LoadingScreen.BackgroundTransparency = 1
 LoadingScreen.GroupTransparency = 0
-
 LoadingScreen.ZIndex = 500
 LoadingScreen.Parent = ScreenGui
 
-CreateFullScreenSky(
-    "LoadingSky",
-    LoadingScreen,
-    500
-)
+CreateFullScreenSky("LoadingSky", LoadingScreen, 500)
 
 --==================================================
 -- LOADING SUN
@@ -436,19 +366,11 @@ CreateFullScreenSky(
 
 local LoadingSun = Instance.new("Frame")
 
-LoadingSun.Size =
-    UDim2.new(0, 135, 0, 135)
-
-LoadingSun.Position =
-    UDim2.new(0.82, 0, 0.06, 0)
-
-LoadingSun.BackgroundColor3 =
-    Color3.fromRGB(255, 239, 150)
-
+LoadingSun.Size = UDim2.new(0, 135, 0, 135)
+LoadingSun.Position = UDim2.new(0.82, 0, 0.06, 0)
+LoadingSun.BackgroundColor3 = Color3.fromRGB(255, 239, 150)
 LoadingSun.BackgroundTransparency = 0.18
-
 LoadingSun.BorderSizePixel = 0
-
 LoadingSun.ZIndex = 501
 LoadingSun.Parent = LoadingScreen
 
@@ -488,46 +410,24 @@ CreateCloud(
 
 local LoadingLogo = Instance.new("Frame")
 
-LoadingLogo.Size =
-    UDim2.new(0, 100, 0, 100)
-
-LoadingLogo.Position =
-    UDim2.new(0.5, -50, 0.35, -50)
-
-LoadingLogo.BackgroundColor3 =
-    Config.AccentDark
-
+LoadingLogo.Size = UDim2.new(0, 100, 0, 100)
+LoadingLogo.Position = UDim2.new(0.5, -50, 0.35, -50)
+LoadingLogo.BackgroundColor3 = Config.AccentDark
 LoadingLogo.BorderSizePixel = 0
-
 LoadingLogo.ZIndex = 510
 LoadingLogo.Parent = LoadingScreen
 
 Corner(LoadingLogo, 25)
+Stroke(LoadingLogo, Config.White, 3, 0.1)
 
-Stroke(
-    LoadingLogo,
-    Config.White,
-    3,
-    0.1
-)
+local LoadingLogoText = Instance.new("TextLabel")
 
-local LoadingLogoText =
-    Instance.new("TextLabel")
-
-LoadingLogoText.Size =
-    UDim2.fromScale(1, 1)
-
+LoadingLogoText.Size = UDim2.fromScale(1, 1)
 LoadingLogoText.BackgroundTransparency = 1
 LoadingLogoText.Text = "W"
-
-LoadingLogoText.TextColor3 =
-    Config.White
-
-LoadingLogoText.Font =
-    Enum.Font.GothamBlack
-
+LoadingLogoText.TextColor3 = Config.White
+LoadingLogoText.Font = Enum.Font.GothamBlack
 LoadingLogoText.TextSize = 52
-
 LoadingLogoText.ZIndex = 511
 LoadingLogoText.Parent = LoadingLogo
 
@@ -535,28 +435,15 @@ LoadingLogoText.Parent = LoadingLogo
 -- LOADING TITLE
 --==================================================
 
-local LoadingTitle =
-    Instance.new("TextLabel")
+local LoadingTitle = Instance.new("TextLabel")
 
-LoadingTitle.Size =
-    UDim2.new(0.8, 0, 0, 50)
-
-LoadingTitle.Position =
-    UDim2.new(0.1, 0, 0.53, 0)
-
+LoadingTitle.Size = UDim2.new(0.8, 0, 0, 50)
+LoadingTitle.Position = UDim2.new(0.1, 0, 0.53, 0)
 LoadingTitle.BackgroundTransparency = 1
-
-LoadingTitle.Text =
-    "WIND CLOUD HUB"
-
-LoadingTitle.TextColor3 =
-    Config.White
-
-LoadingTitle.Font =
-    Enum.Font.GothamBlack
-
+LoadingTitle.Text = "WIND CLOUD HUB"
+LoadingTitle.TextColor3 = Config.White
+LoadingTitle.Font = Enum.Font.GothamBlack
 LoadingTitle.TextSize = 27
-
 LoadingTitle.ZIndex = 510
 LoadingTitle.Parent = LoadingScreen
 
@@ -564,28 +451,15 @@ LoadingTitle.Parent = LoadingScreen
 -- LOADING SUBTITLE
 --==================================================
 
-local LoadingSubtitle =
-    Instance.new("TextLabel")
+local LoadingSubtitle = Instance.new("TextLabel")
 
-LoadingSubtitle.Size =
-    UDim2.new(0.8, 0, 0, 25)
-
-LoadingSubtitle.Position =
-    UDim2.new(0.1, 0, 0.61, 0)
-
+LoadingSubtitle.Size = UDim2.new(0.8, 0, 0, 25)
+LoadingSubtitle.Position = UDim2.new(0.1, 0, 0.61, 0)
 LoadingSubtitle.BackgroundTransparency = 1
-
-LoadingSubtitle.Text =
-    "Preparing the clouds..."
-
-LoadingSubtitle.TextColor3 =
-    Config.White
-
-LoadingSubtitle.Font =
-    Enum.Font.Gotham
-
+LoadingSubtitle.Text = "Preparing the clouds..."
+LoadingSubtitle.TextColor3 = Config.White
+LoadingSubtitle.Font = Enum.Font.Gotham
 LoadingSubtitle.TextSize = 13
-
 LoadingSubtitle.ZIndex = 510
 LoadingSubtitle.Parent = LoadingScreen
 
@@ -593,63 +467,37 @@ LoadingSubtitle.Parent = LoadingScreen
 -- LOADING BAR
 --==================================================
 
-local LoadingBar =
-    Instance.new("Frame")
+local LoadingBar = Instance.new("Frame")
 
-LoadingBar.Size =
-    UDim2.new(0, 280, 0, 8)
-
-LoadingBar.Position =
-    UDim2.new(0.5, -140, 0.69, 0)
-
-LoadingBar.BackgroundColor3 =
-    Config.White
-
+LoadingBar.Size = UDim2.new(0, 280, 0, 8)
+LoadingBar.Position = UDim2.new(0.5, -140, 0.69, 0)
+LoadingBar.BackgroundColor3 = Config.White
 LoadingBar.BackgroundTransparency = 0.45
 LoadingBar.BorderSizePixel = 0
-
 LoadingBar.ZIndex = 510
 LoadingBar.Parent = LoadingScreen
 
 Corner(LoadingBar, 20)
 
-local LoadingFill =
-    Instance.new("Frame")
+local LoadingFill = Instance.new("Frame")
 
-LoadingFill.Size =
-    UDim2.new(0, 0, 1, 0)
-
-LoadingFill.BackgroundColor3 =
-    Config.White
-
+LoadingFill.Size = UDim2.new(0, 0, 1, 0)
+LoadingFill.BackgroundColor3 = Config.White
 LoadingFill.BorderSizePixel = 0
-
 LoadingFill.ZIndex = 511
 LoadingFill.Parent = LoadingBar
 
 Corner(LoadingFill, 20)
 
-local LoadingPercent =
-    Instance.new("TextLabel")
+local LoadingPercent = Instance.new("TextLabel")
 
-LoadingPercent.Size =
-    UDim2.new(0, 100, 0, 25)
-
-LoadingPercent.Position =
-    UDim2.new(0.5, -50, 0.73, 0)
-
+LoadingPercent.Size = UDim2.new(0, 100, 0, 25)
+LoadingPercent.Position = UDim2.new(0.5, -50, 0.73, 0)
 LoadingPercent.BackgroundTransparency = 1
-
 LoadingPercent.Text = "0%"
-
-LoadingPercent.TextColor3 =
-    Config.White
-
-LoadingPercent.Font =
-    Enum.Font.GothamBold
-
+LoadingPercent.TextColor3 = Config.White
+LoadingPercent.Font = Enum.Font.GothamBold
 LoadingPercent.TextSize = 11
-
 LoadingPercent.ZIndex = 510
 LoadingPercent.Parent = LoadingScreen
 
@@ -657,57 +505,32 @@ LoadingPercent.Parent = LoadingScreen
 -- MAIN HUB
 --==================================================
 
-local Main =
-    Instance.new("Frame")
+local Main = Instance.new("Frame")
 
 Main.Name = "MainWindow"
-
-Main.Size =
-    UDim2.new(0, 0, 0, 0)
-
-Main.AnchorPoint =
-    Vector2.new(0.5, 0.5)
-
-Main.Position =
-    UDim2.new(0.5, 0, 0.5, 0)
-
-Main.BackgroundColor3 =
-    Config.Panel
-
+Main.Size = UDim2.new(0, 0, 0, 0)
+Main.AnchorPoint = Vector2.new(0.5, 0.5)
+Main.Position = UDim2.new(0.5, 0, 0.5, 0)
+Main.BackgroundColor3 = Config.Panel
 Main.BackgroundTransparency = 0.08
-
 Main.BorderSizePixel = 0
 Main.ClipsDescendants = true
-
 Main.ZIndex = 10
 Main.Parent = ScreenGui
 
 Corner(Main, 16)
-
-Stroke(
-    Main,
-    Config.White,
-    2,
-    0.05
-)
+Stroke(Main, Config.White, 2, 0.05)
 
 --==================================================
 -- HEADER
 --==================================================
 
-local Header =
-    Instance.new("Frame")
+local Header = Instance.new("Frame")
 
-Header.Size =
-    UDim2.new(1, 0, 0, 52)
-
-Header.BackgroundColor3 =
-    Config.White
-
+Header.Size = UDim2.new(1, 0, 0, 52)
+Header.BackgroundColor3 = Config.White
 Header.BackgroundTransparency = 0.18
-
 Header.BorderSizePixel = 0
-
 Header.ZIndex = 11
 Header.Parent = Main
 
@@ -717,41 +540,24 @@ Corner(Header, 16)
 -- LOGO
 --==================================================
 
-local Logo =
-    Instance.new("Frame")
+local Logo = Instance.new("Frame")
 
-Logo.Size =
-    UDim2.new(0, 34, 0, 34)
-
-Logo.Position =
-    UDim2.new(0, 10, 0.5, -17)
-
-Logo.BackgroundColor3 =
-    Config.AccentDark
-
+Logo.Size = UDim2.new(0, 34, 0, 34)
+Logo.Position = UDim2.new(0, 10, 0.5, -17)
+Logo.BackgroundColor3 = Config.AccentDark
 Logo.ZIndex = 12
 Logo.Parent = Header
 
 Corner(Logo, 10)
 
-local LogoText =
-    Instance.new("TextLabel")
+local LogoText = Instance.new("TextLabel")
 
-LogoText.Size =
-    UDim2.fromScale(1, 1)
-
+LogoText.Size = UDim2.fromScale(1, 1)
 LogoText.BackgroundTransparency = 1
-
 LogoText.Text = "W"
-
-LogoText.TextColor3 =
-    Config.White
-
-LogoText.Font =
-    Enum.Font.GothamBlack
-
+LogoText.TextColor3 = Config.White
+LogoText.Font = Enum.Font.GothamBlack
 LogoText.TextSize = 19
-
 LogoText.ZIndex = 13
 LogoText.Parent = Logo
 
@@ -759,59 +565,29 @@ LogoText.Parent = Logo
 -- TITLE
 --==================================================
 
-local Title =
-    Instance.new("TextLabel")
+local Title = Instance.new("TextLabel")
 
-Title.Size =
-    UDim2.new(0, 240, 0, 25)
-
-Title.Position =
-    UDim2.new(0, 54, 0, 7)
-
+Title.Size = UDim2.new(0, 240, 0, 25)
+Title.Position = UDim2.new(0, 54, 0, 7)
 Title.BackgroundTransparency = 1
-
-Title.Text =
-    "WIND CLOUD HUB"
-
-Title.TextColor3 =
-    Config.Text
-
-Title.Font =
-    Enum.Font.GothamBlack
-
+Title.Text = "WIND CLOUD HUB"
+Title.TextColor3 = Config.Text
+Title.Font = Enum.Font.GothamBlack
 Title.TextSize = 15
-
-Title.TextXAlignment =
-    Enum.TextXAlignment.Left
-
+Title.TextXAlignment = Enum.TextXAlignment.Left
 Title.ZIndex = 12
 Title.Parent = Header
 
-local Subtitle =
-    Instance.new("TextLabel")
+local Subtitle = Instance.new("TextLabel")
 
-Subtitle.Size =
-    UDim2.new(0, 240, 0, 18)
-
-Subtitle.Position =
-    UDim2.new(0, 54, 0, 28)
-
+Subtitle.Size = UDim2.new(0, 240, 0, 18)
+Subtitle.Position = UDim2.new(0, 54, 0, 28)
 Subtitle.BackgroundTransparency = 1
-
-Subtitle.Text =
-    "Ride the wind."
-
-Subtitle.TextColor3 =
-    Config.SubText
-
-Subtitle.Font =
-    Enum.Font.Gotham
-
+Subtitle.Text = "Ride the wind."
+Subtitle.TextColor3 = Config.SubText
+Subtitle.Font = Enum.Font.Gotham
 Subtitle.TextSize = 10
-
-Subtitle.TextXAlignment =
-    Enum.TextXAlignment.Left
-
+Subtitle.TextXAlignment = Enum.TextXAlignment.Left
 Subtitle.ZIndex = 12
 Subtitle.Parent = Header
 
@@ -819,30 +595,16 @@ Subtitle.Parent = Header
 -- MINIMIZE
 --==================================================
 
-local Minimize =
-    Instance.new("TextButton")
+local Minimize = Instance.new("TextButton")
 
-Minimize.Size =
-    UDim2.new(0, 31, 0, 31)
-
-Minimize.Position =
-    UDim2.new(1, -72, 0.5, -15)
-
-Minimize.BackgroundColor3 =
-    Config.PanelDark
-
+Minimize.Size = UDim2.new(0, 31, 0, 31)
+Minimize.Position = UDim2.new(1, -72, 0.5, -15)
+Minimize.BackgroundColor3 = Config.PanelDark
 Minimize.Text = "-"
-
-Minimize.TextColor3 =
-    Config.Text
-
-Minimize.Font =
-    Enum.Font.GothamBold
-
+Minimize.TextColor3 = Config.Text
+Minimize.Font = Enum.Font.GothamBold
 Minimize.TextSize = 17
-
 Minimize.AutoButtonColor = false
-
 Minimize.ZIndex = 12
 Minimize.Parent = Header
 
@@ -852,30 +614,16 @@ Corner(Minimize, 9)
 -- CLOSE
 --==================================================
 
-local Close =
-    Instance.new("TextButton")
+local Close = Instance.new("TextButton")
 
-Close.Size =
-    UDim2.new(0, 31, 0, 31)
-
-Close.Position =
-    UDim2.new(1, -36, 0.5, -15)
-
-Close.BackgroundColor3 =
-    Config.PanelDark
-
+Close.Size = UDim2.new(0, 31, 0, 31)
+Close.Position = UDim2.new(1, -36, 0.5, -15)
+Close.BackgroundColor3 = Config.PanelDark
 Close.Text = "×"
-
-Close.TextColor3 =
-    Config.Danger
-
-Close.Font =
-    Enum.Font.GothamBold
-
+Close.TextColor3 = Config.Danger
+Close.Font = Enum.Font.GothamBold
 Close.TextSize = 18
-
 Close.AutoButtonColor = false
-
 Close.ZIndex = 12
 Close.Parent = Header
 
@@ -891,19 +639,12 @@ local startPosition
 
 Header.InputBegan:Connect(function(input)
 
-    if input.UserInputType ==
-        Enum.UserInputType.MouseButton1
-
-        or input.UserInputType ==
-        Enum.UserInputType.Touch then
+    if input.UserInputType == Enum.UserInputType.MouseButton1
+        or input.UserInputType == Enum.UserInputType.Touch then
 
         dragging = true
-
-        dragStart =
-            input.Position
-
-        startPosition =
-            Main.Position
+        dragStart = input.Position
+        startPosition = Main.Position
     end
 end)
 
@@ -913,33 +654,24 @@ UserInputService.InputChanged:Connect(function(input)
         return
     end
 
-    if input.UserInputType ==
-        Enum.UserInputType.MouseMovement
+    if input.UserInputType == Enum.UserInputType.MouseMovement
+        or input.UserInputType == Enum.UserInputType.Touch then
 
-        or input.UserInputType ==
-        Enum.UserInputType.Touch then
+        local delta = input.Position - dragStart
 
-        local delta =
-            input.Position - dragStart
-
-        Main.Position =
-            UDim2.new(
-                startPosition.X.Scale,
-                startPosition.X.Offset + delta.X,
-
-                startPosition.Y.Scale,
-                startPosition.Y.Offset + delta.Y
-            )
+        Main.Position = UDim2.new(
+            startPosition.X.Scale,
+            startPosition.X.Offset + delta.X,
+            startPosition.Y.Scale,
+            startPosition.Y.Offset + delta.Y
+        )
     end
 end)
 
 UserInputService.InputEnded:Connect(function(input)
 
-    if input.UserInputType ==
-        Enum.UserInputType.MouseButton1
-
-        or input.UserInputType ==
-        Enum.UserInputType.Touch then
+    if input.UserInputType == Enum.UserInputType.MouseButton1
+        or input.UserInputType == Enum.UserInputType.Touch then
 
         dragging = false
     end
@@ -974,13 +706,7 @@ Minimize.MouseButton1Click:Connect(function()
             Main,
             0.3,
             {
-                Size =
-                    UDim2.new(
-                        0,
-                        600,
-                        0,
-                        52
-                    )
+                Size = UDim2.new(0, 600, 0, 52)
             }
         )
 
@@ -992,13 +718,7 @@ Minimize.MouseButton1Click:Connect(function()
             Main,
             0.3,
             {
-                Size =
-                    UDim2.new(
-                        0,
-                        600,
-                        0,
-                        410
-                    )
+                Size = UDim2.new(0, 600, 0, 410)
             }
         )
 
@@ -1036,23 +756,15 @@ Close.MouseButton1Click:Connect(function()
         }
     )
 
-    local closeTween =
-        Tween(
-            Main,
-            0.4,
-            {
-                Size =
-                    UDim2.new(
-                        0,
-                        0,
-                        0,
-                        0
-                    )
-            },
-
-            Enum.EasingStyle.Back,
-            Enum.EasingDirection.In
-        )
+    local closeTween = Tween(
+        Main,
+        0.4,
+        {
+            Size = UDim2.new(0, 0, 0, 0)
+        },
+        Enum.EasingStyle.Back,
+        Enum.EasingDirection.In
+    )
 
     closeTween.Completed:Connect(function()
 
@@ -1066,24 +778,19 @@ end)
 -- RIGHT CONTROL
 --==================================================
 
-UserInputService.InputBegan:Connect(function(
-    input,
-    processed
-)
+UserInputService.InputBegan:Connect(function(input, processed)
 
     if processed then
         return
     end
 
-    if input.KeyCode ==
-        Enum.KeyCode.RightControl then
+    if input.KeyCode == Enum.KeyCode.RightControl then
 
         if closed then
             return
         end
 
-        Main.Visible =
-            not Main.Visible
+        Main.Visible = not Main.Visible
 
         if Main.Visible then
 
@@ -1114,67 +821,38 @@ end)
 -- SIDEBAR
 --==================================================
 
-local Sidebar =
-    Instance.new("Frame")
+local Sidebar = Instance.new("Frame")
 
-Sidebar.Size =
-    UDim2.new(0, 145, 1, -52)
-
-Sidebar.Position =
-    UDim2.new(0, 0, 0, 52)
-
-Sidebar.BackgroundColor3 =
-    Config.White
-
+Sidebar.Size = UDim2.new(0, 145, 1, -52)
+Sidebar.Position = UDim2.new(0, 0, 0, 52)
+Sidebar.BackgroundColor3 = Config.White
 Sidebar.BackgroundTransparency = 0.35
-
 Sidebar.BorderSizePixel = 0
-
 Sidebar.ZIndex = 11
 Sidebar.Parent = Main
 
-local SidebarPadding =
-    Instance.new("UIPadding")
+local SidebarPadding = Instance.new("UIPadding")
 
-SidebarPadding.PaddingTop =
-    UDim.new(0, 10)
+SidebarPadding.PaddingTop = UDim.new(0, 10)
+SidebarPadding.PaddingLeft = UDim.new(0, 8)
+SidebarPadding.PaddingRight = UDim.new(0, 8)
+SidebarPadding.Parent = Sidebar
 
-SidebarPadding.PaddingLeft =
-    UDim.new(0, 8)
+local SidebarLayout = Instance.new("UIListLayout")
 
-SidebarPadding.PaddingRight =
-    UDim.new(0, 8)
-
-SidebarPadding.Parent =
-    Sidebar
-
-local SidebarLayout =
-    Instance.new("UIListLayout")
-
-SidebarLayout.Padding =
-    UDim.new(0, 7)
-
-SidebarLayout.SortOrder =
-    Enum.SortOrder.LayoutOrder
-
-SidebarLayout.Parent =
-    Sidebar
+SidebarLayout.Padding = UDim.new(0, 7)
+SidebarLayout.SortOrder = Enum.SortOrder.LayoutOrder
+SidebarLayout.Parent = Sidebar
 
 --==================================================
 -- CONTENT
 --==================================================
 
-local Content =
-    Instance.new("Frame")
+local Content = Instance.new("Frame")
 
-Content.Size =
-    UDim2.new(1, -157, 1, -64)
-
-Content.Position =
-    UDim2.new(0, 153, 0, 58)
-
+Content.Size = UDim2.new(1, -157, 1, -64)
+Content.Position = UDim2.new(0, 153, 0, 58)
 Content.BackgroundTransparency = 1
-
 Content.ZIndex = 11
 Content.Parent = Main
 
@@ -1187,94 +865,51 @@ local FirstTab = true
 
 local function CreateTab(name)
 
-    local button =
-        Instance.new("TextButton")
+    local button = Instance.new("TextButton")
 
-    button.Size =
-        UDim2.new(1, 0, 0, 39)
-
-    button.BackgroundColor3 =
-        Config.Cloud
-
+    button.Size = UDim2.new(1, 0, 0, 39)
+    button.BackgroundColor3 = Config.Cloud
     button.BackgroundTransparency = 0.25
-
     button.Text = name
-
-    button.TextColor3 =
-        Config.SubText
-
-    button.Font =
-        Enum.Font.GothamBold
-
+    button.TextColor3 = Config.SubText
+    button.Font = Enum.Font.GothamBold
     button.TextSize = 12
-
-    button.TextXAlignment =
-        Enum.TextXAlignment.Left
-
+    button.TextXAlignment = Enum.TextXAlignment.Left
     button.AutoButtonColor = false
-
     button.ZIndex = 12
     button.Parent = Sidebar
 
     Corner(button, 9)
 
-    local padding =
-        Instance.new("UIPadding")
+    local padding = Instance.new("UIPadding")
 
-    padding.PaddingLeft =
-        UDim.new(0, 13)
+    padding.PaddingLeft = UDim.new(0, 13)
+    padding.Parent = button
 
-    padding.Parent =
-        button
+    local page = Instance.new("ScrollingFrame")
 
-    local page =
-        Instance.new("ScrollingFrame")
-
-    page.Size =
-        UDim2.fromScale(1, 1)
-
+    page.Size = UDim2.fromScale(1, 1)
     page.BackgroundTransparency = 1
     page.BorderSizePixel = 0
-
     page.ScrollBarThickness = 3
-
-    page.ScrollBarImageColor3 =
-        Config.AccentDark
-
-    page.AutomaticCanvasSize =
-        Enum.AutomaticSize.Y
-
-    page.CanvasSize =
-        UDim2.new(0, 0, 0, 0)
-
+    page.ScrollBarImageColor3 = Config.AccentDark
+    page.AutomaticCanvasSize = Enum.AutomaticSize.Y
+    page.CanvasSize = UDim2.new(0, 0, 0, 0)
     page.Visible = false
-
     page.ZIndex = 12
     page.Parent = Content
 
-    local pagePadding =
-        Instance.new("UIPadding")
+    local pagePadding = Instance.new("UIPadding")
 
-    pagePadding.PaddingRight =
-        UDim.new(0, 5)
+    pagePadding.PaddingRight = UDim.new(0, 5)
+    pagePadding.PaddingBottom = UDim.new(0, 8)
+    pagePadding.Parent = page
 
-    pagePadding.PaddingBottom =
-        UDim.new(0, 8)
+    local layout = Instance.new("UIListLayout")
 
-    pagePadding.Parent =
-        page
-
-    local layout =
-        Instance.new("UIListLayout")
-
-    layout.Padding =
-        UDim.new(0, 8)
-
-    layout.SortOrder =
-        Enum.SortOrder.LayoutOrder
-
-    layout.Parent =
-        page
+    layout.Padding = UDim.new(0, 8)
+    layout.SortOrder = Enum.SortOrder.LayoutOrder
+    layout.Parent = page
 
     Tabs[name] = {
         Button = button,
@@ -1291,11 +926,8 @@ local function CreateTab(name)
                 tab.Button,
                 0.15,
                 {
-                    BackgroundColor3 =
-                        Config.Cloud,
-
-                    TextColor3 =
-                        Config.SubText
+                    BackgroundColor3 = Config.Cloud,
+                    TextColor3 = Config.SubText
                 }
             )
         end
@@ -1306,11 +938,8 @@ local function CreateTab(name)
             button,
             0.15,
             {
-                BackgroundColor3 =
-                    Config.AccentDark,
-
-                TextColor3 =
-                    Config.White
+                BackgroundColor3 = Config.AccentDark,
+                TextColor3 = Config.White
             }
         )
     end)
@@ -1321,166 +950,77 @@ local function CreateTab(name)
 
         page.Visible = true
 
-        button.BackgroundColor3 =
-            Config.AccentDark
-
-        button.TextColor3 =
-            Config.White
+        button.BackgroundColor3 = Config.AccentDark
+        button.TextColor3 = Config.White
     end
 
     return page
 end
 
 --==================================================
--- CREATE TABS
+-- ONLY SETTINGS TAB
 --==================================================
 
-local PlayerTab =
-    CreateTab("Player")
-
-local CombatTab =
-    CreateTab("Combat")
-
-local VisualsTab =
-    CreateTab("Visuals")
-
-local SettingsTab =
-    CreateTab("Settings")
+local SettingsTab = CreateTab("Settings")
 
 --==================================================
--- EMPTY PLAYER PAGE
+-- CUSTOM ADD BUTTON
 --==================================================
 
-AddSection = nil
+local function AddButton(parent, text, callback)
 
-local PlayerMessage =
-    Instance.new("TextLabel")
+    local Button = Instance.new("TextButton")
 
-PlayerMessage.Size =
-    UDim2.new(1, 0, 0, 70)
+    Button.Name = text or "Button"
 
-PlayerMessage.BackgroundTransparency = 1
-
-PlayerMessage.Text =
-    "No features here."
-
-PlayerMessage.TextColor3 =
-    Config.SubText
-
-PlayerMessage.Font =
-    Enum.Font.GothamMedium
-
-PlayerMessage.TextSize = 12
-
-PlayerMessage.Parent =
-    PlayerTab
-
---==================================================
--- EMPTY COMBAT PAGE
---==================================================
-
-local CombatMessage =
-    Instance.new("TextLabel")
-
-CombatMessage.Size =
-    UDim2.new(1, 0, 0, 70)
-
-CombatMessage.BackgroundTransparency = 1
-
-CombatMessage.Text =
-    "No features here."
-
-CombatMessage.TextColor3 =
-    Config.SubText
-
-CombatMessage.Font =
-    Enum.Font.GothamMedium
-
-CombatMessage.TextSize = 12
-
-CombatMessage.Parent =
-    CombatTab
-
---==================================================
--- EMPTY VISUALS PAGE
---==================================================
-
-local VisualsMessage =
-    Instance.new("TextLabel")
-
-VisualsMessage.Size =
-    UDim2.new(1, 0, 0, 70)
-
-VisualsMessage.BackgroundTransparency = 1
-
-VisualsMessage.Text =
-    "No features here."
-
-VisualsMessage.TextColor3 =
-    Config.SubText
-
-VisualsMessage.Font =
-    Enum.Font.GothamMedium
-
-VisualsMessage.TextSize = 12
-
-VisualsMessage.Parent =
-    VisualsTab
-
---==================================================
--- SETTINGS
---==================================================
-
-local function AddSettingsButton(
-    parent,
-    text,
-    callback
-)
-
-    local button =
-        Instance.new("TextButton")
-
-    button.Size =
+    Button.Size =
         UDim2.new(1, 0, 0, 42)
 
-    button.BackgroundColor3 =
+    Button.BackgroundColor3 =
         Config.Cloud
 
-    button.BackgroundTransparency = 0.1
+    Button.BackgroundTransparency = 0.1
 
-    button.Text = text
+    Button.Text =
+        text or "Button"
 
-    button.TextColor3 =
+    Button.TextColor3 =
         Config.Text
 
-    button.Font =
+    Button.Font =
         Enum.Font.GothamMedium
 
-    button.TextSize = 12
+    Button.TextSize = 12
 
-    button.TextXAlignment =
+    Button.TextXAlignment =
         Enum.TextXAlignment.Left
 
-    button.AutoButtonColor = false
+    Button.AutoButtonColor = false
 
-    button.Parent =
-        parent
+    Button.Parent = parent
 
-    Corner(button, 9)
+    Corner(Button, 9)
 
-    local padding =
+    Stroke(
+        Button,
+        Config.PanelDark,
+        1,
+        0.35
+    )
+
+    local Padding =
         Instance.new("UIPadding")
 
-    padding.PaddingLeft =
+    Padding.PaddingLeft =
         UDim.new(0, 12)
 
-    padding.Parent =
-        button
+    Padding.Parent =
+        Button
 
-    button.MouseEnter:Connect(function()
+    Button.MouseEnter:Connect(function()
 
         Tween(
-            button,
+            Button,
             0.12,
             {
                 BackgroundColor3 =
@@ -1489,10 +1029,10 @@ local function AddSettingsButton(
         )
     end)
 
-    button.MouseLeave:Connect(function()
+    Button.MouseLeave:Connect(function()
 
         Tween(
-            button,
+            Button,
             0.12,
             {
                 BackgroundColor3 =
@@ -1501,16 +1041,18 @@ local function AddSettingsButton(
         )
     end)
 
-    button.MouseButton1Click:Connect(function()
+    Button.MouseButton1Click:Connect(function()
 
-        pcall(callback)
+        if callback then
+            callback()
+        end
     end)
 
-    return button
+    return Button
 end
 
 --==================================================
--- SETTINGS SECTION
+-- SETTINGS TITLE
 --==================================================
 
 local SettingsTitle =
@@ -1539,29 +1081,28 @@ SettingsTitle.Parent =
     SettingsTab
 
 --==================================================
--- REJOIN
+-- REJOIN BUTTON
 --==================================================
 
-AddSettingsButton(
+AddButton(
     SettingsTab,
     "Rejoin Server",
 
     function()
 
-        TeleportService:
-            TeleportToPlaceInstance(
-                game.PlaceId,
-                game.JobId,
-                LocalPlayer
-            )
+        TeleportService:TeleportToPlaceInstance(
+            game.PlaceId,
+            game.JobId,
+            LocalPlayer
+        )
     end
 )
 
 --==================================================
--- RESET UI
+-- RESET UI BUTTON
 --==================================================
 
-AddSettingsButton(
+AddButton(
     SettingsTab,
     "Reset UI Position",
 
@@ -1582,6 +1123,16 @@ AddSettingsButton(
         )
     end
 )
+
+--==================================================
+-- EXAMPLE CUSTOM BUTTON
+--==================================================
+
+-- You can add buttons anywhere later like this:
+--
+-- AddButton(SettingsTab, "Hello", function()
+--     print("Hello!")
+-- end)
 
 --==================================================
 -- INFORMATION
@@ -1666,18 +1217,13 @@ InfoPadding.Parent =
 task.spawn(function()
 
     local duration = 3.2
-
-    local startTime =
-        os.clock()
+    local startTime = os.clock()
 
     while LoadingScreen.Parent do
 
         local progress =
             math.clamp(
-                (
-                    os.clock() -
-                    startTime
-                ) / duration,
+                (os.clock() - startTime) / duration,
                 0,
                 1
             )
@@ -1722,9 +1268,7 @@ task.spawn(function()
 
     task.wait(0.95)
 
-    if LoadingScreen
-        and LoadingScreen.Parent then
-
+    if LoadingScreen and LoadingScreen.Parent then
         LoadingScreen:Destroy()
     end
 
@@ -1761,7 +1305,6 @@ task.spawn(function()
                     0
                 )
         },
-
         Enum.EasingStyle.Back,
         Enum.EasingDirection.Out
     )
